@@ -1,9 +1,15 @@
-'use strict';Object.defineProperty(exports,'__esModule',{value:true});require('animate.css');var vClickOutside=require('v-click-outside-x');//
+'use strict';Object.defineProperty(exports,'__esModule',{value:true});//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 var script = {
   name: "VueSimpleSidenav",
-  directives: {
-    clickOutside: vClickOutside.directive
-  },
   props: {
     options: Object,
     active: Boolean
@@ -12,23 +18,33 @@ var script = {
     return {
       isActive: this.active || false,
       reOptions: {
-        animate: true,
-        enterAnimation: "slideInLeft",
-        exitAnimation: "slideOutLeft",
-        speed: "faster",
+        enterAnimation: "",
+        exitAnimation: "",
         width: "100%",
         closeOnOutsideClick: true,
         closeOnEsc: true,
-        background: '#111'
+        background: '#111111'
       },
       isAnimating: false
     };
   },
   mounted: function mounted() {
+    var _this = this;
+
+    this.sidenav = this.$el.childNodes[0];
+
+    if (this.reOptions.closeOnOutsideClick) {
+      document.addEventListener('click', function (e) {
+        if (e.target !== _this.$el) {
+          _this.clickOutside(e);
+        }
+      });
+    }
+
     if (this.options) {
       Object.assign(this.reOptions, this.options);
-      this.$el.style.width = this.reOptions.width;
-      this.$el.style.background = this.reOptions.background;
+      this.sidenav.style.width = this.reOptions.width;
+      this.sidenav.style.background = this.reOptions.background;
     }
 
     this.bindEsc();
@@ -39,24 +55,15 @@ var script = {
         this.handleClosing(true);
       }
     },
-    handleOpening: function handleOpening() {
-      if (this.reOptions.animate) {
-        this.animateCSS(this.reOptions.enterAnimation || "slideInLeft");
-      }
-    },
     handleClosing: function handleClosing() {
-      var _this = this;
-
       var emit = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : false;
 
       if (this.options.animate) {
-        this.animateCSS(this.reOptions.exitAnimation, function () {
-          if (emit) {
-            _this.$emit('update:active', false);
-          }
+        if (emit) {
+          this.$emit('update:active', false);
+        }
 
-          _this.isActive = false;
-        });
+        this.isActive = false;
       } else {
         if (emit) {
           this.$emit('update:active', false);
@@ -81,40 +88,21 @@ var script = {
     resolveState: function resolveState(value) {
       if (value) {
         this.isActive = true;
-        this.$el.style.visibility = "visible";
-        this.handleOpening();
+        this.$el.style.visibility = "visible"; // this.handleOpening();
       } else {
         this.handleClosing();
       }
-    },
-    animateCSS: function animateCSS(animation) {
-      var _this3 = this;
-
-      var callback = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : function () {};
-      var prefix = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : "animate__";
-      var animationName = "".concat(prefix).concat(animation);
-      var animationSpeed = "".concat(prefix).concat(this.reOptions.speed);
-      this.$el.classList.add("".concat(prefix, "animated"), animationSpeed, animationName);
-      this.$el.addEventListener("animationend", function () {
-        _this3.$el.classList.remove("".concat(prefix, "animated"), animationSpeed, animationName);
-
-        _this3.$emit('animationend');
-
-        callback();
-      }, {
-        once: true
-      });
     }
   },
   watch: {
     active: function active(value) {
-      var _this4 = this;
+      var _this3 = this;
 
       if (value !== this.isActive) {
         this.resolveState(value);
         this.isAnimating = true;
         setTimeout(function () {
-          _this4.isAnimating = false;
+          _this3.isAnimating = false;
         }, 150);
       }
     }
@@ -243,20 +231,21 @@ var __vue_render__ = function __vue_render__() {
 
   var _c = _vm._self._c || _h;
 
-  return _c('div', {
+  return _c('div', [_c('transition', {
+    attrs: {
+      "name": "custom-classes-transition",
+      "enter-active-class": _vm.reOptions.enterAnimation,
+      "leave-active-class": _vm.reOptions.exitAnimation
+    }
+  }, [_c('div', {
     directives: [{
       name: "show",
       rawName: "v-show",
       value: _vm.isActive,
       expression: "isActive"
-    }, {
-      name: "click-outside",
-      rawName: "v-click-outside",
-      value: _vm.clickOutside,
-      expression: "clickOutside"
     }],
     staticClass: "vue-simple-sidenav"
-  }, [_vm._t("default")], 2);
+  }, [_vm._t("default")], 2)])], 1);
 };
 
 var __vue_staticRenderFns__ = [];
@@ -264,8 +253,8 @@ var __vue_staticRenderFns__ = [];
 
 var __vue_inject_styles__ = function __vue_inject_styles__(inject) {
   if (!inject) return;
-  inject("data-v-30246e04_0", {
-    source: ".vue-simple-sidenav{position:fixed;z-index:1000;top:0;left:0;width:100%;height:100%;--animate-duration:0.6s}",
+  inject("data-v-7b951416_0", {
+    source: ".vue-simple-sidenav{position:fixed;z-index:5000;top:0;left:0;width:100%;height:100%}",
     map: undefined,
     media: undefined
   });
@@ -276,7 +265,7 @@ var __vue_inject_styles__ = function __vue_inject_styles__(inject) {
 var __vue_scope_id__ = undefined;
 /* module identifier */
 
-var __vue_module_identifier__ = "data-v-30246e04";
+var __vue_module_identifier__ = "data-v-7b951416";
 /* functional template */
 
 var __vue_is_functional_template__ = false;

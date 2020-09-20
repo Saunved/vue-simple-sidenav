@@ -1,18 +1,16 @@
 <template>
-  <div class="vue-simple-sidenav" v-show="isActive" v-click-outside="clickOutside">
-    <slot></slot>
-  </div>
+<div>
+  <transition name="custom-classes-transition" :enter-active-class="reOptions.enterAnimation" :leave-active-class="reOptions.exitAnimation">
+    <div v-show="isActive" class="vue-simple-sidenav" >
+      <slot></slot>
+    </div>
+  </transition>
+</div>
 </template>
 
 <script>
-import "animate.css";
-import * as vClickOutside from "v-click-outside-x";
-
 export default {
   name: "VueSimpleSidenav",
-  directives: {
-    clickOutside: vClickOutside.directive,
-  },  
   props: {
     options: Object,
     active: Boolean
@@ -21,24 +19,31 @@ export default {
     return {
       isActive: this.active || false,
       reOptions: {
-        animate: true,
-        enterAnimation: "slideInLeft",
-        exitAnimation: "slideOutLeft",
-        speed: "faster",
+        enterAnimation: "",
+        exitAnimation: "",
         width: "100%",
         closeOnOutsideClick: true,
         closeOnEsc: true,
-        background: '#111'
+        background: '#111111'
       },
-      isAnimating: false,
+      isAnimating: false
     };
   },
   mounted() {
+    this.sidenav = this.$el.childNodes[0];
+
+    if(this.reOptions.closeOnOutsideClick){
+      document.addEventListener('click', (e) => {
+        if(e.target !== this.$el){
+          this.clickOutside(e);
+        }
+      })
+    }
 
     if (this.options) {
       Object.assign(this.reOptions, this.options);
-      this.$el.style.width = this.reOptions.width;
-      this.$el.style.background = this.reOptions.background;
+      this.sidenav.style.width = this.reOptions.width;
+      this.sidenav.style.background = this.reOptions.background;
     }
     this.bindEsc();
   },
@@ -48,19 +53,12 @@ export default {
         this.handleClosing(true);
       }
     },
-    handleOpening() {
-      if (this.reOptions.animate) {
-        this.animateCSS(this.reOptions.enterAnimation || "slideInLeft");
-      }
-    },
     handleClosing(emit = false) {
       if (this.options.animate) {
-        this.animateCSS(this.reOptions.exitAnimation, () => {
           if (emit) {
             this.$emit('update:active', false)
           }
           this.isActive = false;
-        });
       } else {
         if (emit) {
           this.$emit('update:active', false)
@@ -83,33 +81,10 @@ export default {
       if (value) {
         this.isActive = true;
         this.$el.style.visibility = "visible";
-        this.handleOpening();
+        // this.handleOpening();
       } else {
         this.handleClosing();
       }
-    },
-    animateCSS(animation, callback = () => {}, prefix = "animate__") {
-      const animationName = `${prefix}${animation}`;
-      const animationSpeed = `${prefix}${this.reOptions.speed}`;
-      this.$el.classList.add(
-        `${prefix}animated`,
-        animationSpeed,
-        animationName
-      );
-
-      this.$el.addEventListener(
-        "animationend",
-        () => {
-          this.$el.classList.remove(
-            `${prefix}animated`,
-            animationSpeed,
-            animationName
-          );
-          this.$emit('animationend')
-          callback();
-        },
-        { once: true }
-      );
     },
   },
   watch: {
@@ -129,11 +104,10 @@ export default {
 <style lang="scss">
 .vue-simple-sidenav {
   position: fixed;
-  z-index: 1000;
+  z-index: 5000;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  --animate-duration: 0.6s;
 }
 </style>

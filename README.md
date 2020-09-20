@@ -1,10 +1,24 @@
-<script>
-import Vue from 'vue';
-import VueSimpleSidenav from '@/vue-simple-sidenav.vue';
-import 'animate.css';
+Lightweight Vue sidenav with support for CSS transitions and zero dependencies, 4kb minified js
 
-export default Vue.extend({
-  name: 'ServeDev',
+This component exposes a single slot where you can insert your sidebar. Sample code for a simple menu is provided below to help you get started
+
+## How to use
+
+```bash
+npm i vue-simple-sidenav
+```
+
+The code below uses *animate.css* classes for transitions. Feel free to define your own classes and specify them in the sidenavOptions.
+
+## Example 
+
+**index.vue**
+```html
+<script>
+import VueSimpleSidenav from 'vue-simple-sidenav';
+import 'animate.css'; // optional, used here for CSS transitions, feel free to use your own classes
+
+export default {
   components: {
     VueSimpleSidenav
   },
@@ -21,23 +35,25 @@ export default Vue.extend({
         }
     }
   }
-});
+};
 </script>
 <template>
   <div id="app">
     <vue-simple-sidenav :active.sync="open" v-bind="{options: sidenavOptions}">
-    <a href="https://example.com">Link 1</a>
-    <a href="https://example.com">Link 2</a>
-    <a href="https://example.com">Link 3</a>
-    <button @click="open=false">Close</button>
+        <a href="https://example.com">Link 1</a>
+        <a href="https://example.com">Link 2</a>
+        <a href="https://example.com">Link 3</a>
+        <button @click="open=false">Close</button>
 </vue-simple-sidenav>
 
 <button @click="open=true">Open sidenav</button>
   </div>
 </template>
 
-
 <style lang="scss">
+/*
+This is sample SCSS code for a menu. Feel free to use this or create your own styles.
+*/
 .vue-simple-sidenav {
   display: flex;
   flex-direction: column;
@@ -60,6 +76,9 @@ export default Vue.extend({
       border: none;
     }
   }
+
+  /* If using animate.css, setting duration to 0.6s gives a really smooth effect. Feel free to change */
   --animate-duration: 0.6s;
 }
 </style>
+```

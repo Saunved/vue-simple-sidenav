@@ -1,12 +1,15 @@
-import 'animate.css';
-import { directive } from 'v-click-outside-x';
-
+//
+//
+//
+//
+//
+//
+//
+//
+//
 //
 var script = {
   name: "VueSimpleSidenav",
-  directives: {
-    clickOutside: directive
-  },
   props: {
     options: Object,
     active: Boolean
@@ -16,24 +19,32 @@ var script = {
     return {
       isActive: this.active || false,
       reOptions: {
-        animate: true,
-        enterAnimation: "slideInLeft",
-        exitAnimation: "slideOutLeft",
-        speed: "faster",
+        enterAnimation: "",
+        exitAnimation: "",
         width: "100%",
         closeOnOutsideClick: true,
         closeOnEsc: true,
-        background: '#111'
+        background: '#111111'
       },
       isAnimating: false
     };
   },
 
   mounted() {
+    this.sidenav = this.$el.childNodes[0];
+
+    if (this.reOptions.closeOnOutsideClick) {
+      document.addEventListener('click', e => {
+        if (e.target !== this.$el) {
+          this.clickOutside(e);
+        }
+      });
+    }
+
     if (this.options) {
       Object.assign(this.reOptions, this.options);
-      this.$el.style.width = this.reOptions.width;
-      this.$el.style.background = this.reOptions.background;
+      this.sidenav.style.width = this.reOptions.width;
+      this.sidenav.style.background = this.reOptions.background;
     }
 
     this.bindEsc();
@@ -46,21 +57,13 @@ var script = {
       }
     },
 
-    handleOpening() {
-      if (this.reOptions.animate) {
-        this.animateCSS(this.reOptions.enterAnimation || "slideInLeft");
-      }
-    },
-
     handleClosing(emit = false) {
       if (this.options.animate) {
-        this.animateCSS(this.reOptions.exitAnimation, () => {
-          if (emit) {
-            this.$emit('update:active', false);
-          }
+        if (emit) {
+          this.$emit('update:active', false);
+        }
 
-          this.isActive = false;
-        });
+        this.isActive = false;
       } else {
         if (emit) {
           this.$emit('update:active', false);
@@ -85,24 +88,10 @@ var script = {
     resolveState(value) {
       if (value) {
         this.isActive = true;
-        this.$el.style.visibility = "visible";
-        this.handleOpening();
+        this.$el.style.visibility = "visible"; // this.handleOpening();
       } else {
         this.handleClosing();
       }
-    },
-
-    animateCSS(animation, callback = () => {}, prefix = "animate__") {
-      const animationName = `${prefix}${animation}`;
-      const animationSpeed = `${prefix}${this.reOptions.speed}`;
-      this.$el.classList.add(`${prefix}animated`, animationSpeed, animationName);
-      this.$el.addEventListener("animationend", () => {
-        this.$el.classList.remove(`${prefix}animated`, animationSpeed, animationName);
-        this.$emit('animationend');
-        callback();
-      }, {
-        once: true
-      });
     }
 
   },
@@ -259,20 +248,21 @@ var __vue_render__ = function () {
 
   var _c = _vm._self._c || _h;
 
-  return _c('div', {
+  return _c('div', [_c('transition', {
+    attrs: {
+      "name": "custom-classes-transition",
+      "enter-active-class": _vm.reOptions.enterAnimation,
+      "leave-active-class": _vm.reOptions.exitAnimation
+    }
+  }, [_c('div', {
     directives: [{
       name: "show",
       rawName: "v-show",
       value: _vm.isActive,
       expression: "isActive"
-    }, {
-      name: "click-outside",
-      rawName: "v-click-outside",
-      value: _vm.clickOutside,
-      expression: "clickOutside"
     }],
     staticClass: "vue-simple-sidenav"
-  }, [_vm._t("default")], 2);
+  }, [_vm._t("default")], 2)])], 1);
 };
 
 var __vue_staticRenderFns__ = [];
@@ -280,8 +270,8 @@ var __vue_staticRenderFns__ = [];
 
 const __vue_inject_styles__ = function (inject) {
   if (!inject) return;
-  inject("data-v-30246e04_0", {
-    source: ".vue-simple-sidenav{position:fixed;z-index:1000;top:0;left:0;width:100%;height:100%;--animate-duration:0.6s}",
+  inject("data-v-7b951416_0", {
+    source: ".vue-simple-sidenav{position:fixed;z-index:5000;top:0;left:0;width:100%;height:100%}",
     map: undefined,
     media: undefined
   });
