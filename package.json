@@ -1,6 +1,6 @@
 {
   "name": "vue-simple-sidenav",
-  "version": "1.0.0-beta.1",
+  "version": "1.0.0-beta.4",
   "description": "Lightweight Vue sidenav with support for CSS transitions and zero dependencies",
   "main": "dist/vue-simple-sidenav.ssr.js",
   "browser": "dist/vue-simple-sidenav.esm.js",

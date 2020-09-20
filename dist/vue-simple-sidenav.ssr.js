@@ -35,7 +35,7 @@ var script = {
 
     if (this.reOptions.closeOnOutsideClick) {
       document.addEventListener('click', function (e) {
-        if (e.target !== _this.$el) {
+        if (e.target !== _this.sidenav) {
           _this.clickOutside(e);
         }
       });
@@ -58,19 +58,11 @@ var script = {
     handleClosing: function handleClosing() {
       var emit = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : false;
 
-      if (this.options.animate) {
-        if (emit) {
-          this.$emit('update:active', false);
-        }
-
-        this.isActive = false;
-      } else {
-        if (emit) {
-          this.$emit('update:active', false);
-        }
-
-        this.isActive = false;
+      if (emit) {
+        this.$emit('update:active', false);
       }
+
+      this.isActive = false;
     },
     bindEsc: function bindEsc() {
       var _this2 = this;
@@ -253,7 +245,7 @@ var __vue_staticRenderFns__ = [];
 
 var __vue_inject_styles__ = function __vue_inject_styles__(inject) {
   if (!inject) return;
-  inject("data-v-7b951416_0", {
+  inject("data-v-91febb12_0", {
     source: ".vue-simple-sidenav{position:fixed;z-index:5000;top:0;left:0;width:100%;height:100%}",
     map: undefined,
     media: undefined
@@ -265,7 +257,7 @@ var __vue_inject_styles__ = function __vue_inject_styles__(inject) {
 var __vue_scope_id__ = undefined;
 /* module identifier */
 
-var __vue_module_identifier__ = "data-v-7b951416";
+var __vue_module_identifier__ = "data-v-91febb12";
 /* functional template */
 
 var __vue_is_functional_template__ = false;

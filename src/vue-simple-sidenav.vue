@@ -34,7 +34,7 @@ export default {
 
     if(this.reOptions.closeOnOutsideClick){
       document.addEventListener('click', (e) => {
-        if(e.target !== this.$el){
+        if(e.target !== this.sidenav){
           this.clickOutside(e);
         }
       })
