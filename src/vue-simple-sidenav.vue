@@ -54,17 +54,10 @@ export default {
       }
     },
     handleClosing(emit = false) {
-      if (this.options.animate) {
-          if (emit) {
-            this.$emit('update:active', false)
-          }
-          this.isActive = false;
-      } else {
         if (emit) {
           this.$emit('update:active', false)
         }
         this.isActive = false;
-      }
     },
     bindEsc() {
       if(this.reOptions.closeOnEsc){
