@@ -11,6 +11,7 @@ npm i vue-simple-sidenav
 The code below uses *animate.css* classes for transitions. Feel free to define your own classes and specify them in the sidenavOptions.
 
 ## Example 
+[View on CodeSandbox](https://codesandbox.io/s/vue-simple-sidenav-example-hsegq?file=/src/App.vue)
 
 **index.vue**
 ```html
